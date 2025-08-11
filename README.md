@@ -1,2 +1,5 @@
-# TimeAcher
-联机 cocos 游戏
+# 工程模板
+
+基于3.0.0
+
+![image](./img/1.png)

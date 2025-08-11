@@ -1,0 +1,25 @@
+Skill ID(first use (1 form 2 value 3buff4 triggered) Second three categories fourth five levels) ,name,Instructions,Skill level,prefab name,"Skill icon Name
+",Skill number boost,price,flight speed
+string,string,string,string,string,string,string,number,number
+ID,name,desc,range,resName,icon,value,price,speed
+10101,Dual shot,Shoot two arrows forward simultaneously,101,arrowDouble,arrowDouble,,80,
+10201,continuous fire,Shoot two arrows straight forward,102,,arrContinuous,,80,
+10301,Umbrella fire,Fire two more arrows to the forward sides,103,arrowUmbrella,arrowUmbrella,,80,
+10401,Reverse fire,Shoot one more arrow backwards,104,arrowReverse,arrowReverse,,80,
+10501,Flank fire,Shoot one more arrow to the left and one more to the right,105,arrowSide,arrowSide,,80,
+10601,Penetration,The arrow hits the enemy and penetrates and continues to fly,106,,arrowPenetrate,,80,
+20101,Atk 1,Gives the character a small amount of damage,201,,raiseAttack01,0.5,70,
+20102,Atk 2,Increases the character's damage by a large amount,201,,raiseAttack02,1,70,
+20201,Evasion,Increased the character's dodge rate by a small amount,202,,raiseDodge,0.1,70,
+20301,Critical Hit + Critical Damage 1,Increases the character's critical chance and critical damage by a small amount,203,,raiseCriticalHitDamage01,0.1#0.5,70,
+20302,Critical + Critical Damage 2,Increases your character's critical chance and critical damage by a significant amount,203,,raiseCriticalHitDamage02,0.2#1,70,
+20401,Attack speed increased by 1,Increased character attack speed in small amounts,204,,raiseAttackSpeed01,0.1,70,
+20402,Attack speed increased by 2,Increased the character's massive attack speed,204,,raiseAttackSpeed02,0.2,70,
+20501,HP,Increased character life limit,205,,raiseHpLimit,0.5,100,
+20601,recover,Restores the character's current health,206,,recovery,1,50,
+20701,Move,Increased character movement speed by a small amount,207,,moveSpeed,0.2,70,
+30101,Freeze,Hit enemies will slow down their attack speed and movement speed,301,arrowIce,arrowice,,100,
+30201,Burn,Hit enemies take burn damage,302,arrowFire,arrowFire,,100,
+40101,Lightning,A hit enemy fires lightning at nearby enemies,401,arrowLightning,arrowLightning,,100,
+40201,bloodthirst,Restores health when killing enemies,402,,bloodthirsty,,120,
+40301,catapult,"When an arrow hits an enemy, it will affect a nearby enemy",403,,arrowLaunch,,80,
