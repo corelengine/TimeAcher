@@ -4,6 +4,7 @@ import { Constant } from "./constant";
 import { LocalConfig } from "./localConfig";
 import { StorageManager } from "./storageManager";
 import { ClientEvent } from './clientEvent';
+import { NameGenerator } from '../utils/nameGenerator';
 
 const { ccclass, property } = _decorator;
 
@@ -125,6 +126,7 @@ export class PlayerData extends Component {
             diamond: 0, //钻石总数
             gold: 0,//金币数量
             key: 0, //钥匙数量
+            name: NameGenerator.generateXianxiaName(), //三字仙侠风昵称
             level: 1,  //当前层级
             highestLevel: 1,//已经解锁的最高层级
             arrSkill: [],//已经解锁的玩家技能ID
@@ -140,6 +142,46 @@ export class PlayerData extends Component {
         }
 
         this.savePlayerInfoToLocalCache();
+    }
+
+    public ensurePlayerName () {
+        if (!this._playerInfo) {
+            return;
+        }
+
+        if (!this._playerInfo.name) {
+            this._playerInfo.name = NameGenerator.generateXianxiaName();
+            this.savePlayerInfoToLocalCache();
+        }
+    }
+
+    public get playerName () {
+        if (!this._playerInfo?.name) {
+            this.ensurePlayerName();
+        }
+
+        return this._playerInfo?.name ?? "";
+    }
+
+    public rerollPlayerName () {
+        this.setPlayerName(NameGenerator.generateXianxiaName());
+        return this.playerName;
+    }
+
+    public setPlayerName (name: string) {
+        if (!this._playerInfo) {
+            this.createPlayerInfo();
+        }
+
+        const nextName = NameGenerator.sanitizeName(name);
+        if (!NameGenerator.isValidName(nextName)) {
+            return false;
+        }
+
+        this._playerInfo.name = nextName;
+        this.savePlayerInfoToLocalCache();
+        ClientEvent.dispatchEvent(Constant.EVENT_TYPE.REFRESH_PLAYER_NAME, nextName);
+        return true;
     }
 
     /**

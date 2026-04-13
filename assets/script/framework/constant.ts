@@ -21,6 +21,7 @@ export class Constant {
     //settings的本地缓存key值
     public static SETTINGS_KEY = {
         FIGHT_TIMES: "fightTimes", //过关次数
+        PLAYER_NAME: "playerName", //玩家名称
     }
 
     //玩家动画类型
@@ -86,6 +87,7 @@ export class Constant {
         REFRESH_DIAMOND: "refreshDiamond",//更新钻石
         REFRESH_GOLD: "refreshGold",//更新金币
         REFRESH_LEVEL: "refreshLevel",//刷新关卡
+        REFRESH_PLAYER_NAME: "refreshPlayerName",//刷新玩家名称
         REFRESH_BOSS_BLOOD: 'refreshBossBlood',//刷新boss血量
         RECYCLE_ALL: "recycleAll",//回收所有模型、特效
         REMOVE_NODE_GAME_START: "removeNodeGameStart",//隐藏“游戏初始化gameStart”界面节点
@@ -102,6 +104,10 @@ export class Constant {
         INHALE_REWARD: "inhaleReward",//吸入奖品(金币、爱心)
 
         PARSE_PLAYER_SKILL: "parsePlayerSkill",//解析玩家技能
+        NETWORK_CONNECTED: "networkConnected",
+        NETWORK_DISCONNECTED: "networkDisconnected",
+        NETWORK_ERROR: "networkError",
+        NETWORK_RECONNECT_FAILED: "networkReconnectFailed",
 
         MONSTER_MOVE: "monsterMove",//怪物开始移动
     }

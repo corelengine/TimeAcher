@@ -2099,6 +2099,9 @@
     "__prefab": {
       "__id__": 100
     },
+    "lbUserName": {
+      "__id__": 5
+    },
     "ndJoystick": {
       "__id__": 8
     },

@@ -10,38 +10,44 @@ import { LocalConfig } from '../../framework/localConfig';
 import * as i18n from '../../../../extensions/i18n/assets/LanguageData'
 
 const { ccclass, property } = _decorator;
-//战斗界面脚本
+
 @ccclass('FightPanel')
 export class FightPanel extends Component {
-    @property(Node)
-    public ndJoystick: Node = null!;//手柄节点
-
     @property(Label)
-    public lbGold: Label = null!;//金币数量
-
-    @property(Label)
-    public lbLevel: Label = null!;//等级
+    public lbUserName: Label = null!;
 
     @property(Node)
-    public ndBossBloodBar: Node = null!;//boss血量进度条节点
+    public ndJoystick: Node = null!;
 
-    private _debugClickTimes: number = 0;//调试点击次数
+    @property(Label)
+    public lbGold: Label = null!;
 
-    onEnable () {
+    @property(Label)
+    public lbLevel: Label = null!;
+
+    @property(Node)
+    public ndBossBloodBar: Node = null!;
+
+    private _debugClickTimes: number = 0;
+
+    onEnable() {
         ClientEvent.on(Constant.EVENT_TYPE.REFRESH_GOLD, this._refreshGold, this);
         ClientEvent.on(Constant.EVENT_TYPE.REFRESH_LEVEL, this._refreshLevel, this);
+        ClientEvent.on(Constant.EVENT_TYPE.REFRESH_PLAYER_NAME, this._refreshPlayerName, this);
     }
 
-    onDisable () {
+    onDisable() {
         ClientEvent.off(Constant.EVENT_TYPE.REFRESH_GOLD, this._refreshGold, this);
         ClientEvent.off(Constant.EVENT_TYPE.REFRESH_LEVEL, this._refreshLevel, this);
+        ClientEvent.off(Constant.EVENT_TYPE.REFRESH_PLAYER_NAME, this._refreshPlayerName, this);
     }
 
-    public show () {
+    public show() {
         i18n.updateSceneRenderers();
 
         this.ndBossBloodBar.active = false;
 
+        this._refreshPlayerName();
         this._refreshGold();
         this._refreshLevel();
 
@@ -54,20 +60,26 @@ export class FightPanel extends Component {
         this._debugClickTimes = 0;
     }
 
-    private _refreshGold () {
+    private _refreshGold() {
         this.lbGold.string = Util.formatMoney(PlayerData.instance.playerInfo.gold);
     }
 
-    private _refreshLevel () {
+    private _refreshPlayerName() {
+        if (this.lbUserName) {
+            this.lbUserName.string = PlayerData.instance.playerName;
+        }
+    }
+
+    private _refreshLevel() {
         this.lbLevel.string = `level ${PlayerData.instance.playerInfo.level}`;
     }
 
-    public onBtnPauseClick () {
+    public onBtnPauseClick() {
         UIManager.instance.showDialog("pause/pausePanel", [], () => { }, Constant.PRIORITY.DIALOG);
         GameManager.isGamePause = true;
     }
 
-    public onBtnDebugClick () {
+    public onBtnDebugClick() {
         this._debugClickTimes += 1;
 
         if (this._debugClickTimes >= 1) {

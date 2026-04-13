@@ -5,6 +5,8 @@ import { ResourceUtil } from '../framework/resourceUtil';
 import { Constant } from '../framework/constant';
 import { Monster } from './monster';
 import { PoolManager } from '../framework/poolManager';
+import { RemotePlayer } from './remotePlayer';
+import { MultiplayerManager } from './multiplayerManager';
 //单只弓箭脚本
 const { ccclass, property } = _decorator;
 @ccclass('Arrow')
@@ -283,6 +285,20 @@ export class Arrow extends Component {
 
                 scriptMonster.changeDragonMat();
             }
+        } else if (otherCollider.getGroup() === Constant.PHY_GROUP.PLAYER) {
+            const remotePlayer = otherCollider.node.getComponent(RemotePlayer) as RemotePlayer | null;
+            if (!remotePlayer || remotePlayer.isDie) {
+                return;
+            }
+
+            let scriptArrow = this.node.getComponent(Arrow) as Arrow;
+            if (!GameManager.scriptPlayer.isArrowPenetrate) {
+                scriptArrow.hideArrow();
+            }
+
+            const damage = Math.max(1, Math.round(GameManager.scriptPlayer.curAttackPower));
+            remotePlayer.showHit(damage);
+            MultiplayerManager.instance?.attackRemotePlayer(remotePlayer.userId, damage);
         }
     }
 

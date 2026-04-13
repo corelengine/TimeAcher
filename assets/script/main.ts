@@ -59,6 +59,8 @@ export class Main extends Component {
             PlayerData.instance.createPlayerInfo();
         }
 
+        PlayerData.instance.ensurePlayerName();
+
         //加载CSV相关配置
         LocalConfig.instance.loadConfig(() => {
             SdkUtil.shareGame(Constant.GAME_NAME_CH, "");

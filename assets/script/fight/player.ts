@@ -15,6 +15,7 @@ import { UIManager } from '../framework/uiManager';
 import { PlayerBloodBar } from '../ui/fight/playerBloodBar';
 import { CharacterRigid } from './characterRigid';
 import { PoolManager } from '../framework/poolManager';
+import { MultiplayerManager } from './multiplayerManager';
 //玩家脚本
 let qt_0 = new Quat();
 let v3_0 = new Vec3();
@@ -619,12 +620,12 @@ export class Player extends Component {
      */
     private _onPlayerStopMove () {
         if (!GameManager.isGameOver && GameManager.isGameStart) {
-            if (GameManager.arrMonster.length) {
+            if (GameManager.arrMonster.length || GameManager.arrRemotePlayer.length) {
                 let isMonsterSurvive = GameManager.arrMonster.some((item: Node) => {
                     return item.parent !== null;
                 })
 
-                if (isMonsterSurvive) {
+                if (isMonsterSurvive || GameManager.getNearestRemotePlayer()) {
                     this._attackMonster();
                 }
             } else {
@@ -656,7 +657,7 @@ export class Player extends Component {
      * 向怪物方向攻击
      */
     private _attackMonster () {
-        this._ndTarget = GameManager.getNearestMonster()!;
+        this._ndTarget = GameManager.getNearestMonster() ?? GameManager.getNearestRemotePlayer();
 
         if (!this._ndTarget || this.isDie) {
             return;
@@ -821,6 +822,16 @@ export class Player extends Component {
             UIManager.instance.showBloodTips(this, tipType, -damage, this._bloodTipOffsetPos);
             this.scriptBloodBar.refreshBlood(-damage);
         }
+    }
+
+    public reduceBloodByValue (damage: number, attackerName: string = '敌方玩家') {
+        if (this.isDie || !this.scriptBloodBar) {
+            return;
+        }
+
+        UIManager.instance.showTips(`${attackerName} 对你造成 ${Math.round(damage)} 点伤害`);
+        UIManager.instance.showBloodTips(this, Constant.FIGHT_TIP.REDUCE_BLOOD, -damage, this._bloodTipOffsetPos);
+        this.scriptBloodBar.refreshBlood(-damage);
     }
 
     /**

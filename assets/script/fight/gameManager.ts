@@ -9,6 +9,7 @@ import { LocalConfig } from '../framework/localConfig';
 import { AudioManager } from '../framework/audioManager';
 import { Util } from '../framework/util';
 import { PoolManager } from '../framework/poolManager';
+import { MultiplayerManager } from './multiplayerManager';
 const { ccclass, property } = _decorator;
 //游戏管理脚本
 @ccclass('GameManager')
@@ -171,6 +172,14 @@ export class GameManager extends Component {
         return this._existentNum;
     }
 
+    public static set arrRemotePlayer (v: Node[]) {
+        this._arrRemotePlayer = v;
+    }
+
+    public static get arrRemotePlayer () {
+        return this._arrRemotePlayer;
+    }
+
     public static set attackAddition (v: number) {
         this._attackAddition = v;
     }
@@ -260,6 +269,7 @@ export class GameManager extends Component {
     private static _isTesting: boolean = true;//是否开启测试代码
     private static _isFirstLoad: boolean = false;//是否首次加载
     private static _arrMonster: Node[] = []; //小怪、boss数组
+    private static _arrRemotePlayer: Node[] = [];
     private static _existentNum: number = 0;//本层加载的npc、大爱心现存数量（怪物不会和npc、大爱心同时出现，配置表格需注意）
     //本层敌人加成
     private static _attackAddition: number = 1;//本层敌人攻击加成
@@ -314,6 +324,10 @@ export class GameManager extends Component {
             //@ts-ignore
             window.constant = Constant;
         }
+
+        if (!this.getComponent(MultiplayerManager)) {
+            this.addComponent(MultiplayerManager);
+        }
     }
 
     /**
@@ -342,6 +356,7 @@ export class GameManager extends Component {
         GameManager.isWin = false;
         GameManager.isRevive = false;
         GameManager.arrMonster = [];
+        GameManager.arrRemotePlayer = GameManager.arrRemotePlayer.filter((item: Node) => item && item.parent);
         GameManager.gameSpeed = 1;
         GameManager.ndBoss = null!;
         GameManager.existentNum = 0;
@@ -415,6 +430,7 @@ export class GameManager extends Component {
             let scriptPlayer: any = GameManager.ndPlayer?.getComponent("Player");
             GameManager.scriptPlayer = scriptPlayer;
             scriptPlayer?.init();
+            MultiplayerManager.instance?.attachLocalPlayer();
 
             // if (GameManager.isFirstLoad) {
             //     GameManager.isFirstLoad = false;
@@ -440,7 +456,7 @@ export class GameManager extends Component {
 
         for (let i = this.node.children.length - 1; i >= 0; i--) {
             const ndChild = this.node.children[i];
-            if (ndChild.name !== "player01") {
+            if (ndChild.name !== "player01" && !ndChild.name.startsWith("remote_")) {
                 PoolManager.instance.putNode(ndChild);
             }
         }
@@ -519,6 +535,24 @@ export class GameManager extends Component {
         } else {
             return null;
         }
+    }
+
+    public static getNearestRemotePlayer () {
+        if (!GameManager.arrRemotePlayer.length || !GameManager.ndPlayer) {
+            return null;
+        }
+
+        let arr = GameManager.arrRemotePlayer.filter((item: Node) => {
+            return item && item.parent !== null && item.active;
+        });
+
+        arr = arr.sort((a: any, b: any) => {
+            let distanceA = Util.getTwoNodeXZLength(GameManager.ndPlayer, a);
+            let distanceB = Util.getTwoNodeXZLength(GameManager.ndPlayer, b);
+            return distanceA - distanceB;
+        });
+
+        return arr[0] ?? null;
     }
 
     /**
