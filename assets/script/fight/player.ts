@@ -339,9 +339,9 @@ export class Player extends Component {
             this.curDodgeRate = this.playerBaseInfo.dodgeRate;
             this.curCriticalHitRate = this.playerBaseInfo.criticalHitRate;
             this.curCriticalHitDamage = this.playerBaseInfo.criticalHitDamage;
-            this.curHpLimit = this.playerBaseInfo.hp;
+            this.curHpLimit = 10000;
 
-            this._hp = this.playerBaseInfo.hp;
+            this._hp = 10000;
         }
 
         this._parsePlayerSkill(true);

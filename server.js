@@ -11,7 +11,7 @@ const wss = new WebSocket.Server({ server });
 const clients = new Map();
 const rooms = new Map();
 const roomPlayers = new Map();
-const MAX_ROOM_PLAYERS = 10;
+const MAX_ROOM_PLAYERS = 20;
 
 wss.on('connection', (ws) => {
     console.log('New client connected');

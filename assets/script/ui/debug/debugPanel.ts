@@ -29,6 +29,9 @@ export class DebugPanel extends Component {
     @property(Prefab)
     public pbSkillItem: Prefab = null!;//技能预制体
 
+    @property(Node)
+    public btnClose: Node = null!;//关闭按钮
+
     /**
      * 展示界面
      */
@@ -39,6 +42,8 @@ export class DebugPanel extends Component {
 
         this._initLevelView();
         this._initSkillView();
+        
+        console.log('DebugPanel: Show method called, close button should be visible');
     }
 
     /**

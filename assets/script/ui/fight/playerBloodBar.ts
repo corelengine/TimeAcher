@@ -54,7 +54,7 @@ export class PlayerBloodBar extends Component {
     private _minBloodBarWidth: number = 100;//最小整体血条宽度
     private _bloodBarWidth: number = 0;//当前整体血条宽度
     private _minBloodBarItemWidth: number = 10;//最小单个血块宽度
-    private _maxItemBlood: number = 200;//每隔血条
+    private _maxItemBlood: number = 2000;//每隔血条
     private _totalBlood: number = 0;//总的血量
     private _ndTarget: Node = null!;//跟随目标
     private _offsetPos: Vec3 = null!;//偏差

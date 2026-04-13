@@ -1,13 +1,14 @@
 import { Constant } from './../framework/constant';
 import { Monster } from './monster';
 import { Boss } from './boss';
-import { _decorator, Component, Node, Vec3, PhysicsSystem, isValid } from 'cc';
+import { _decorator, Component, Node, Vec3, PhysicsSystem, isValid, Color, Director, Scene, Camera, find } from 'cc';
 import { LocalConfig } from '../framework/localConfig';
 import { ResourceUtil } from '../framework/resourceUtil';
 import { GameManager } from './gameManager';
 import { ClientEvent } from '../framework/clientEvent';
 import { AudioManager } from '../framework/audioManager';
 import { PoolManager } from '../framework/poolManager';
+import { PlayerData } from '../framework/playerData';
 const { ccclass, property } = _decorator;
 //关卡模型管理脚本（怪物、爱心、障碍、npc）
 @ccclass('MapManager')
@@ -30,6 +31,29 @@ export class MapManager extends Component {
     private _arrMap: any = [];//当前关卡数据表
     private _dictModuleType: any;//待加载的模块种类
     private static _isMapAnS: boolean = false;//是否是S型暗夜地图
+    
+    // 天气类型定义
+    private static readonly WEATHER_TYPE = {
+        SUNNY: 'sunny',
+        CLOUDY: 'cloudy',
+        RAINY: 'rainy',
+        SNOWY: 'snowy',
+        FOGGY: 'foggy',
+        STORMY: 'stormy'
+    };
+    
+    // 天气颜色配置
+    private readonly weatherColors = {
+        [MapManager.WEATHER_TYPE.SUNNY]: new Color(135, 206, 250, 255), // 晴朗天空蓝
+        [MapManager.WEATHER_TYPE.CLOUDY]: new Color(192, 192, 192, 255), // 多云灰色
+        [MapManager.WEATHER_TYPE.RAINY]: new Color(100, 100, 120, 255), // 阴雨暗蓝色
+        [MapManager.WEATHER_TYPE.SNOWY]: new Color(240, 248, 255, 255), // 雪天淡蓝色
+        [MapManager.WEATHER_TYPE.FOGGY]: new Color(200, 200, 200, 255), // 雾天灰白色
+        [MapManager.WEATHER_TYPE.STORMY]: new Color(60, 60, 80, 255) // 暴风雨深蓝色
+    };
+    
+    // 关卡天气映射
+    private levelWeatherMap: { [key: number]: string } = {};
 
     onEnable () {
         ClientEvent.on(Constant.EVENT_TYPE.SHOW_WARP_GATE, this._showWarpGate, this);
@@ -40,7 +64,65 @@ export class MapManager extends Component {
     }
 
     start () {
-        // [3]
+        // 初始化关卡天气映射
+        this._initLevelWeatherMap();
+    }
+
+    /**
+     * 初始化关卡天气映射
+     * 
+     * @private
+     * @memberof MapManager
+     */
+    private _initLevelWeatherMap () {
+        // 为1-55关卡分配不同的天气
+        const weatherTypes = Object.values(MapManager.WEATHER_TYPE);
+        for (let i = 1; i <= 55; i++) {
+            // 循环分配天气类型
+            const weatherIndex = (i - 1) % weatherTypes.length;
+            this.levelWeatherMap[i] = weatherTypes[weatherIndex];
+        }
+        
+        // 特殊关卡的天气设置（可以根据需要调整）
+        this.levelWeatherMap[1] = MapManager.WEATHER_TYPE.SUNNY; // 第一关晴朗
+        this.levelWeatherMap[10] = MapManager.WEATHER_TYPE.RAINY; // 第10关阴雨
+        this.levelWeatherMap[20] = MapManager.WEATHER_TYPE.SNOWY; // 第20关风雪
+        this.levelWeatherMap[30] = MapManager.WEATHER_TYPE.STORMY; // 第30关暴风雨
+        this.levelWeatherMap[40] = MapManager.WEATHER_TYPE.FOGGY; // 第40关雾天
+        this.levelWeatherMap[50] = MapManager.WEATHER_TYPE.CLOUDY; // 第50关多云
+        this.levelWeatherMap[55] = MapManager.WEATHER_TYPE.SUNNY; // 第55关晴朗
+    }
+
+    /**
+     * 设置场景天气
+     * 
+     * @private
+     * @param {number} level - 关卡等级
+     * @memberof MapManager
+     */
+    private _setSceneWeather (level: number) {
+        const weatherType = this.levelWeatherMap[level] || MapManager.WEATHER_TYPE.SUNNY;
+        const weatherColor = this.weatherColors[weatherType];
+        
+        console.log(`Level ${level} weather set to ${weatherType}, color: ${weatherColor.toString()}`);
+        
+        try {
+            // 直接获取主相机并设置背景颜色
+            const mainCamera = find('Main Camera');
+            if (mainCamera) {
+                const camera = mainCamera.getComponent(Camera);
+                if (camera) {
+                    camera.clearColor = weatherColor;
+                    console.log('Camera clear color set successfully');
+                } else {
+                    console.log('Camera component not found');
+                }
+            } else {
+                console.log('Main Camera not found');
+            }
+        } catch (error) {
+            console.error('Error setting weather:', error);
+        }
     }
 
     public buildMap (mapName: string, progressCb: Function, completeCb: Function) {
@@ -51,6 +133,25 @@ export class MapManager extends Component {
         this._arrMap = [];
 
         this._arrMap = LocalConfig.instance.getTableArr(mapName).concat();
+        
+        console.log('MapManager: Building map:', mapName);
+        
+        // 尝试从PlayerData中获取当前关卡等级
+        const currentLevel = PlayerData.instance.playerInfo.level;
+        console.log('MapManager: Current level from PlayerData:', currentLevel);
+        
+        // 从mapName中提取关卡等级并设置天气
+        let level = currentLevel;
+        const levelMatch = mapName.match(/\d+/);
+        if (levelMatch) {
+            level = parseInt(levelMatch[0]);
+            console.log('MapManager: Extracted level from mapName:', level);
+        } else {
+            console.log('MapManager: No level found in mapName:', mapName, 'using current level:', level);
+        }
+        
+        // 设置天气
+        this._setSceneWeather(level);
 
         let cb = () => {
             if (mapName.startsWith("map1")) {
@@ -61,6 +162,14 @@ export class MapManager extends Component {
                 this._ndAn && (this._ndAn.active = true);
                 this._ndAnS && (this._ndAnS.active = false);
                 MapManager.isMapAnS = false;
+            }
+            
+            // 在场景加载完成后再次设置天气，确保生效
+            const levelMatch = mapName.match(/\d+/);
+            if (levelMatch) {
+                const level = parseInt(levelMatch[0]);
+                console.log('MapManager: Setting weather after scene load, level:', level);
+                this._setSceneWeather(level);
             }
 
             if (isValid(this._ndWarpGate)) {

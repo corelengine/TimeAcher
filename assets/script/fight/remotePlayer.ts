@@ -121,9 +121,9 @@ export class RemotePlayer extends Component {
         }
 
         if (this._nameNode && GameManager.mainCamera) {
-            const uiPos = GameManager.mainCamera.convertToUINode(this.node.worldPosition, find('Canvas') as Node, new Vec3());
-            uiPos.y += 170;
-            this._nameNode.setPosition(uiPos);
-        }
+                const uiPos = GameManager.mainCamera.convertToUINode(this.node.worldPosition, find('Canvas') as Node, new Vec3());
+                uiPos.y += 200; // 增加Y轴偏移，确保名称显示在血条上方
+                this._nameNode.setPosition(uiPos);
+            }
     }
 }

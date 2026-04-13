@@ -7,5 +7,8 @@
   "uuid": "b062bb7e-05dc-44e5-a9d6-285b07f2f92d",
   "version": "3.3.1",
   "_sourceId": "f7b75e60-64fb-4cdf-851c-0d23962aeb2d",
-  "_storeId": "dfdc77017c09471ad8e094bb6c980011"
+  "_storeId": "dfdc77017c09471ad8e094bb6c980011",
+  "dependencies": {
+    "ws": "^8.20.0"
+  }
 }

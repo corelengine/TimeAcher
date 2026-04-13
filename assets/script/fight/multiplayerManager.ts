@@ -15,7 +15,7 @@ const { ccclass } = _decorator;
 export class MultiplayerManager extends Component {
     public static instance: MultiplayerManager | null = null;
 
-    private _roomId: string = 'fight-room';
+    private _roomId: string = 'default';
     private _remotePlayers: Map<string, RemotePlayer> = new Map();
     private _joinedRoom: boolean = false;
 
@@ -31,6 +31,7 @@ export class MultiplayerManager extends Component {
         ClientEvent.on('NETWORK_player_leave', this._onPlayerLeave, this);
         ClientEvent.on('NETWORK_player_attack', this._onPlayerAttack, this);
         ClientEvent.on('NETWORK_join_error', this._onJoinError, this);
+        ClientEvent.on(Constant.EVENT_TYPE.ON_GAME_INIT, this._onGameInit, this);
     }
 
     onDisable() {
@@ -41,6 +42,7 @@ export class MultiplayerManager extends Component {
         ClientEvent.off('NETWORK_player_leave', this._onPlayerLeave, this);
         ClientEvent.off('NETWORK_player_attack', this._onPlayerAttack, this);
         ClientEvent.off('NETWORK_join_error', this._onJoinError, this);
+        ClientEvent.off(Constant.EVENT_TYPE.ON_GAME_INIT, this._onGameInit, this);
     }
 
     start() {
@@ -50,6 +52,24 @@ export class MultiplayerManager extends Component {
     public attachLocalPlayer() {
         this._joinedRoom = false;
         this._tryJoinRoom();
+    }
+
+    private _onGameInit() {
+        // 当游戏重新初始化时（比如关卡切换），重新加入房间
+        console.log('MultiplayerManager: Game init, trying to join room');
+        this._joinedRoom = false;
+        // 清除之前的远程玩家，因为场景已经重新加载
+        this._remotePlayers.forEach((remotePlayer) => {
+            if (remotePlayer.node && remotePlayer.node.isValid) {
+                PoolManager.instance.putNode(remotePlayer.node);
+            }
+        });
+        this._remotePlayers.clear();
+        GameManager.arrRemotePlayer = [];
+        // 延迟一点时间，确保玩家节点已经创建
+        setTimeout(() => {
+            this._tryJoinRoom();
+        }, 1000);
     }
 
     public syncLocalPlayer() {
