@@ -34,6 +34,7 @@ export class LoadingPanel extends Component {
         this._showCb = callback;
 
         this._showLoadingPanel();
+        // this._hideLoadingPanel();
     }
 
     private _hideLoadingPanel (callback?: Function) {

@@ -14,7 +14,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Main')
 export class Main extends Component {
-    private _minLoadDuration: number = 4;//加载开屏最小持续时间
+    private _minLoadDuration: number = 2;//加载开屏最小持续时间
 
     start () {
         let frameRate = StorageManager.instance.getGlobalData("frameRate");

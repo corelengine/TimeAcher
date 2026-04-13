@@ -483,7 +483,9 @@
     "_disabledSprite": null,
     "_duration": 0.1,
     "_zoomScale": 1.2,
-    "_target": null,
+    "_target": {
+      "__id__": 10
+    },
     "_id": ""
   },
   {
@@ -602,8 +604,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 345,
-      "height": 170
+      "width": 291,
+      "height": 150
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -677,7 +679,7 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 130.59199999999998,
+    "_top": 140.59199999999998,
     "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
@@ -934,7 +936,9 @@
     "_disabledSprite": null,
     "_duration": 0.1,
     "_zoomScale": 1.2,
-    "_target": null,
+    "_target": {
+      "__id__": 31
+    },
     "_id": ""
   },
   {
@@ -1379,7 +1383,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -179.93499999999995,
+      "y": -194.55,
       "z": 0
     },
     "_lrot": {
@@ -1432,7 +1436,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 20.126,
+      "y": 18.299,
       "z": 0
     },
     "_lrot": {
@@ -1472,8 +1476,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 158,
-      "height": 41
+      "width": 145,
+      "height": 37
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1650,7 +1654,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 35.59375,
+      "width": 35.59159822232223,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -1689,7 +1693,7 @@
     "_string": "99",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 32,
+    "_actualFontSize": 41.6625,
     "_fontSize": 32,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
@@ -1990,7 +1994,9 @@
     "_disabledSprite": null,
     "_duration": 0.1,
     "_zoomScale": 1.2,
-    "_target": null,
+    "_target": {
+      "__id__": 81
+    },
     "_id": ""
   },
   {
@@ -2202,7 +2208,9 @@
     "_disabledSprite": null,
     "_duration": 0.1,
     "_zoomScale": 1.2,
-    "_target": null,
+    "_target": {
+      "__id__": 90
+    },
     "_id": ""
   },
   {
@@ -2623,7 +2631,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 30,
+      "width": 29.9933899639964,
       "height": 44.1
     },
     "_anchorPoint": {
@@ -2662,7 +2670,7 @@
     "_string": "中",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 30,
+    "_actualFontSize": 39.05859375,
     "_fontSize": 30,
     "_fontFamily": "Arial",
     "_lineHeight": 35,
@@ -2759,7 +2767,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 36.6943359375,
+      "width": 36.68625065631563,
       "height": 44.1
     },
     "_anchorPoint": {
@@ -2798,7 +2806,7 @@
     "_string": "En",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 30,
+    "_actualFontSize": 39.05859375,
     "_fontSize": 30,
     "_fontFamily": "Arial",
     "_lineHeight": 35,
